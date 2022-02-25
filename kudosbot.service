@@ -1,0 +1,12 @@
+[Unit]
+Description=Kudosbot
+StartLimitIntervalSec=5
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/env python3 /home/pi/kudosbot/main.py
+
+[Install]
+WantedBy=multi-user.target

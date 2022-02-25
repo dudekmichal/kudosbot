@@ -7,6 +7,7 @@ from logging.handlers import RotatingFileHandler
 import schedule
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 
 import config
@@ -38,8 +39,11 @@ class KudosBot:
         options.add_argument('--disable-gpu')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
+
+        ser = Service(config.driver_path)
+
         self.driver = webdriver.Chrome(
-            executable_path=config.driver_path, options=options)
+            service=ser, options=options)
         self.login()
 
         try:
@@ -53,10 +57,10 @@ class KudosBot:
         self.driver.get("https://www.strava.com/login")
         self.sleep(TIME_STRAVA_LOGGING)
 
-        mail = self.driver.find_element_by_css_selector("input[type='email']")
+        mail = self.driver.find_element(by="id", value="email")
         mail.send_keys(config.email)
 
-        password = self.driver.find_element_by_css_selector("input[type='password']")
+        password = self.driver.find_element(by="id", value="password")
         password.send_keys(config.password)
         password.send_keys(Keys.RETURN)
         self.sleep(TIME_STRAVA_LOGGING)
@@ -78,8 +82,7 @@ class KudosBot:
             kudos_limit = random.randint(10, 16)
             self.go_to_club_recent_activities(club_name=club)
 
-            unfilled_kudos = self.driver.find_elements_by_xpath(
-                '//*[@data-testid="unfilled_kudos"]')
+            unfilled_kudos = self.driver.find_elements(by="xpath", value="//*[@data-testid='unfilled_kudos']")
 
             new_kudos_quantity = 0
 

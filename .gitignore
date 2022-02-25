@@ -1,2 +1,6 @@
 *.log
 *.log.1
+test_main.py
+.idea
+__pycache__
+config.py
